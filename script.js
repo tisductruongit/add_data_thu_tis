@@ -74,9 +74,14 @@ document.getElementById("orderForm").addEventListener("submit", async function (
   e.preventDefault();
 
   const form = e.target;
-  const data = new URLSearchParams(new FormData(form));
+  const submitButton = form.querySelector('button[type="submit"]');
   const messageBox = document.getElementById("message");
+
+  submitButton.disabled = true;
+  submitButton.innerHTML = 'Đang gửi... <span class="spinner"></span>';
   messageBox.classList.add("hidden");
+
+  const data = new URLSearchParams(new FormData(form));
 
   try {
     const response = await fetch("https://script.google.com/macros/s/AKfycbxQ64C5LlIHyzQSJ3_i_pNKIhS_mJE9vdmGhNxatXUfignt647tWmCyFwffS4rKV4YI/exec", {
@@ -99,6 +104,7 @@ document.getElementById("orderForm").addEventListener("submit", async function (
     } else {
       messageBox.className = "error";
     }
+
   } catch (err) {
     console.error("Lỗi gửi dữ liệu:", err);
     messageBox.textContent = "❌ Không thể gửi. Vui lòng thử lại!";
@@ -106,4 +112,6 @@ document.getElementById("orderForm").addEventListener("submit", async function (
   }
 
   messageBox.classList.remove("hidden");
+  submitButton.disabled = false;
+  submitButton.innerHTML = 'Gửi đơn';
 });
